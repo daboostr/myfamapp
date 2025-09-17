@@ -12,15 +12,15 @@ interface UseIntersectionObserverOptions {
   triggerOnce?: boolean
 }
 
-interface UseIntersectionObserverResult {
-  ref: React.RefObject<HTMLElement>
+interface UseIntersectionObserverResult<T extends HTMLElement = HTMLElement> {
+  ref: React.RefObject<T>
   isIntersecting: boolean
   hasIntersected: boolean
 }
 
-export function useIntersectionObserver(
+export function useIntersectionObserver<T extends HTMLElement = HTMLElement>(
   options: UseIntersectionObserverOptions = {}
-): UseIntersectionObserverResult {
+): UseIntersectionObserverResult<T> {
   const {
     threshold = 0.1,
     root = null,
@@ -28,7 +28,7 @@ export function useIntersectionObserver(
     triggerOnce = true
   } = options
 
-  const ref = useRef<HTMLElement>(null)
+  const ref = useRef<T>(null)
   const [isIntersecting, setIsIntersecting] = useState(false)
   const [hasIntersected, setHasIntersected] = useState(false)
 
@@ -82,7 +82,7 @@ export function useIntersectionObserver(
 
 // Hook for lazy loading images specifically
 export function useLazyImage(src: string) {
-  const { ref, hasIntersected } = useIntersectionObserver({
+  const { ref, hasIntersected } = useIntersectionObserver<HTMLDivElement>({
     triggerOnce: true,
     threshold: 0.1,
     rootMargin: '100px' // Start loading 100px before element enters viewport
