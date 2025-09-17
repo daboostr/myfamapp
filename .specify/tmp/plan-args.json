@@ -1,0 +1,3 @@
+{
+  "technicalContext": "Next.js with static site configuration (SSG), no databases; data for galleries is embedded in content; site must be responsive and mobile-ready."
+}

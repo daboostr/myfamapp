@@ -1,0 +1,16 @@
+{
+  "name": "OneDrive Photo Gallery",
+  "short_name": "PhotoGallery",
+  "description": "Modern photo sharing gallery for OneDrive shared images",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf9f8",
+  "theme_color": "#0078d4",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}

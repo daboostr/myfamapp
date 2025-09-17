@@ -1,0 +1,18 @@
+{
+  "title": "M365-Style OneDrive Photo Sharing Web App",
+  "description": "I am building a modern, sleek photo sharing website using OneDrive. The user logins using their Microsoft ID. Once logged in, a MS Graph queries for OneDrive files shared with me. The page organizes the results from the graph query by grouping by people in one panel and shows a gallery of images shared by those people. Make it modern and use UI components that look like a modern M365 application.",
+  "goals": [
+    "Sign in with Microsoft account",
+    "Fetch OneDrive items 'shared with me'",
+    "Group by sharing person in a people panel",
+    "Show image gallery of shared items",
+    "Modern Microsoft 365-style user experience"
+  ],
+  "nonFunctional": [
+    "Accessibility baseline (WCAG 2.1 AA essentials)",
+    "Responsive across mobile, tablet, desktop",
+    "Minimal permissions required",
+    "Static web app suitable for CDN deployment",
+    "Good performance for initial load"
+  ]
+}

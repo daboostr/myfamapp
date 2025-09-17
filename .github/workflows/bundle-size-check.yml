@@ -1,0 +1,125 @@
+name: Bundle Size & Performance Check
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  bundle-size-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build application
+      run: npm run build:static
+      
+    - name: Validate bundle size
+      run: npm run validate:bundle
+      
+    - name: Validate performance
+      run: npm run validate:performance
+      
+    - name: Generate bundle analysis
+      if: github.event_name == 'pull_request'
+      run: npm run analyze
+      
+    - name: Upload bundle reports
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-reports
+        path: reports/
+        retention-days: 30
+        
+    - name: Comment bundle size on PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          try {
+            const reportPath = path.join(process.cwd(), 'reports', 'bundle-size-report.json');
+            const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+            
+            const status = report.isValid ? '✅' : '❌';
+            const mainSize = report.mainBundleSizeKB;
+            const totalSize = report.totalSizeKB;
+            const limit = report.limitKB;
+            
+            const comment = `## Bundle Size Check ${status}
+            
+            | Metric | Size | Limit | Status |
+            |--------|------|-------|--------|
+            | Main Bundle | ${mainSize}KB | ${limit}KB | ${mainSize <= limit ? '✅' : '❌'} |
+            | Total JavaScript | ${totalSize}KB | ${limit * 2}KB | ${totalSize <= limit * 2 ? '✅' : '❌'} |
+            
+            ### Files:
+            ${report.files.map(f => `- \`${f.path}\`: ${f.sizeKB}KB`).join('\n')}
+            
+            ${!report.isValid ? '\n⚠️ **Bundle size exceeds limit!** Consider code splitting or removing unused dependencies.' : ''}
+            `;
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+          } catch (error) {
+            console.error('Failed to post bundle size comment:', error);
+          }
+
+  lighthouse-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build application
+      run: npm run build:static
+      
+    - name: Serve application
+      run: |
+        npm install -g serve
+        serve -s out -p 3000 &
+        sleep 10
+        
+    - name: Run Lighthouse
+      run: |
+        npm install -g lighthouse
+        lighthouse http://localhost:3000 \
+          --output=html,json \
+          --output-path=./reports/lighthouse \
+          --chrome-flags="--headless --no-sandbox"
+          
+    - name: Upload Lighthouse reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: lighthouse-reports
+        path: reports/lighthouse*
+        retention-days: 30

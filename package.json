@@ -1,0 +1,58 @@
+{
+  "name": "myfamapp-onedrive-gallery",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "export": "next export",
+    "build:static": "next build && next export",
+    "start": "next start",
+    "preview": "npx serve out",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "analyze": "cross-env ANALYZE=true next build",
+    "bundle:analyze": "npm run build && npx @next/bundle-analyzer",
+    "test": "jest",
+    "test:e2e": "playwright test",
+    "test:a11y": "npm run build && npm run test:lighthouse",
+    "test:lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./reports/lighthouse.html",
+    "validate:bundle": "node scripts/validate-bundle-size.js",
+    "validate:performance": "node scripts/validate-performance.js",
+    "validate:all": "npm run test && npm run validate:bundle && npm run validate:performance",
+    "deploy:prepare": "node scripts/deploy-production.js",
+    "deploy:validate": "npm run validate:all && npm run deploy:prepare"
+  },
+  "dependencies": {
+    "@azure/msal-browser": "^3.0.0",
+    "@fluentui/react-components": "^9.45.0",
+    "@fluentui/react-icons": "^2.0.220",
+    "next": "14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@next/bundle-analyzer": "^14.0.0",
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.8.0",
+    "@types/react": "^18.2.25",
+    "@types/react-dom": "^18.2.10",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "lighthouse": "^11.0.0",
+    "typescript": "^5.2.0",
+    "webpack-bundle-analyzer": "^4.9.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie <= 11"
+  ]
+}
