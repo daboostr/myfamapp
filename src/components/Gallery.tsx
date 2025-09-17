@@ -228,7 +228,7 @@ function ImageCard({ item, index, hasError, onClick, onKeyDown, onImageError, on
   
   return (
     <div 
-      ref={lazyRef} 
+      ref={lazyRef as React.RefObject<HTMLDivElement>} 
       className={`image-card ${hasError ? 'has-error' : ''}`}
       role="gridcell"
     >

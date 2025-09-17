@@ -21,7 +21,6 @@ const nextConfig = {
   
   // Bundle optimization
   experimental: {
-    optimizeCss: true,
     esmExternals: false
   },
   

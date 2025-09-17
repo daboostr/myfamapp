@@ -13,11 +13,10 @@ npm install
 npm run dev   # e.g., next dev
 
 # build static output
-npm run build    # e.g., next build
-npm run export   # e.g., next export → outputs to ./out
+npm run build:static  # next build → outputs to ./out
 
-# preview static output (if supported)
-npm run preview
+# preview static output
+npm run preview       # serve static files from ./out
 ```
 
 ## Configuration
